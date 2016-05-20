@@ -18,21 +18,21 @@ Heart failure is a progressive, often terminal stage of cardiac disease that, wh
 
 Heart fails dues to multiple causes. Most common are Coronary artery disease and Myocardial infraction. Others causes can be Hypertension, Myocarditis, Aoric stenosis, Mitral stenosis, tricuspid stenosis, regurgitation of mitral or aortic valve, Constrictive pericarditis, Restrictive Cardiomyopathy, Left ventricular hypertrophy, fibrosis, cardiac tamponade, arrythmias, congenital heart diseases etc. Some non cardiac diseases also contribute to the worsening of heart diseases like diabetes mellitus and pulmonary hypertension.
 
-The study considered some conditions which can be easily assessed in the outpatient setting and come up with a risk score for having heart disease in 4 yrs time.  Some of the factors considered were: 
--Age
--Left Ventricular Hypertrophy (LVH) using EKG
--Cardiomegaly (ratio >.5)
--Heart Rate (HR)
--Systolic BP (SBP)
--Diabetes Mellitus (DM)
--Valvular Heart Disease (VHD) presence of murmur > 3/6 and
--Congenital Heart Disease (CHD)
-
+The study considered some conditions which can be easily assessed in the outpatient setting and come up with a risk score for having heart disease in 4 yrs time.  Some of the factors considered were:   
+-Age  
+-Left Ventricular Hypertrophy (LVH) using EKG  
+-Cardiomegaly (ratio >.5)  
+-Heart Rate (HR)  
+-Systolic BP (SBP)  
+-Diabetes Mellitus (DM)  
+-Valvular Heart Disease (VHD) presence of murmur > 3/6 and  
+-Congenital Heart Disease (CHD)  
+  
 The study on which the referenced paper is based on is the Framingham Study which is a prospective, epidemiological, population-based study designed to investigate the prevalence, incidence, and determinants of cardiovascular disease.
 
 
 ###Objective:
--To come up with the heart failure risk score and predict the occurance of heart failue in a patient using histry and examination in the clinic and simple investigative tools like EKG and Chest X-ray?
+-To come up with the heart failure risk score and predict the occurance of heart failue in a patient using histry and examination in the clinic and simple investigative tools like EKG and Chest X-ray?  
 
 -Enable the general practitioners and internists to estimate the risk of developing heart failure in predisposed persons with coronary disease, hypertension, or valvular heart disease—the most common causes of the condition.
 
@@ -41,13 +41,13 @@ The study on which the referenced paper is based on is the Framingham Study whic
 
 It is a known fact that heart failure increase by age.  Similarly it's contributing factors like hypertension, diabetes mellitus, valvular heart disease, left ventricular hypertrophy etc also increase by age. Here, most features are linearly and positively correlated with age. And each feature also is positively correlated with risk score.
 
-Attempts were made to make the data mimic population prevalence of the conditions and definitely more effort will improve the outcome.
-A sample of 8000 observations were generated mimicking the study. The study provided mean values but not the standard deviations.
--Age was generated using random normal distribution with mean age of 63 and standard deviation of 10 yrs.
--LVH, Cardiomegaly, Diabetes Mellitus, VHD and CHD  were generated using random uniform distribution value and logistic equation.
--Heart rate and systolic blood pressure were measured using random normal distribution using mean of 75.8 and 149.5 respectively from the study.
--Few outliers were added to age, heart rate and systolic blood pressure.
-
+Attempts were made to make the data mimic population prevalence of the conditions and definitely more effort will improve the outcome.  
+A sample of 500 observations were generated mimicking the study. The study provided mean values but not the standard deviations.  
+-Age was generated using random normal distribution with mean age of 63 and standard deviation of 10 yrs.  
+-LVH, Cardiomegaly, Diabetes Mellitus, VHD and CHD  were generated using random uniform distribution value and logistic equation.  
+-Heart rate and systolic blood pressure were measured using random normal distribution using mean of 75.8 and 149.5 respectively from the study.  
+-Few outliers were added to age, heart rate and systolic blood pressure.  
+  
 The study developed a point system to calculate the risk but to make the calculation simpler I decided to use the weightage multipliers system to mimic the data.
 
 
