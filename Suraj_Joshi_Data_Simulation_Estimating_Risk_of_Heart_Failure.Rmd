@@ -49,41 +49,23 @@ A sample of 8000 observations were generated mimicking the study. The study prov
 -Heart rate and systolic blood pressure were measured using random normal distribution using mean of 75.8 and 149.5 respectively from the study.
 -Few outliers were added to age, heart rate and systolic blood pressure.
 
-![Distribution] (https://github.com/spa380/DataSimulation616/blob/master/data_dist.png)
-
-
 The study developed a point system to calculate the risk but to make the calculation simpler I decided to use the weightage multipliers system to mimic the data.
-
-Analysis of 
-
-
-
-
-
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-
 
 
 ```{r}
-N<- 8000
+N<- 500
 generateDataset <- function (N) {
   set.seed(1000)
   Age <- round(rnorm(N, 63, 10))
   par(mfrow=c(2,2))
   hist(Age, 10)
-#   summary(Age)
   
-  LVH <- runif(N)< .3*logistic((Age-60)/10) # # Left Ventricular Hypertrophy on EKG # boolean 0 = none 1 = present
-                          # 20% prevalence # boolean 0 or 1
-  (sum(LVH==TRUE)/N)*100
-  hist(LVH)
-  
+  LVH <- runif(N)< .25*logistic((Age-60)/10) # # Left Ventricular Hypertrophy on EKG # boolean 0 = none 1 = present
+  (sum(LVH==TRUE)/N)*100 #  ~ 15 % in population to find the prevalence in the given age group
+
   Cardiomegaly <- runif(N)< .08*logistic((Age-60)/10) # Xray # boolean 0 or 1
   (sum(Cardiomegaly==TRUE)/N)*100
-  # hist(Cardiomegaly)
-  
+
   HR <- round(rnorm(N, 75.8,10)+Age*.05) # heart rate # high if > 120 bpm numerical
   hist(HR)
   
@@ -92,7 +74,6 @@ generateDataset <- function (N) {
 
   DM <- runif(N)< .17*logistic((Age-60)/10) # diabetes mellitus or in insulin or oral hypoglycemics boolean 0 or 
   (sum(DM==TRUE)/N)*100
-  # hist(DM)
   
   VHD <- runif(N)< .2*logistic((Age-45)/10)  # valvular heart disease # boolean  0 or 1
   # Epidemiology of acquired valvular heart disease. http://www.ncbi.nlm.nih.gov/pubmed/24986049
@@ -103,17 +84,62 @@ generateDataset <- function (N) {
   
   RiskScore <- 10*(Age*.025+LVH*.01+Cardiomegaly*.0001+HR*.0002+SBP*.005+.07*DM+VHD*.01+CHD*.03)
   hist(RiskScore)
+  
   # Outliers
   a = sample(1:500, 10)
   Age[a] <- ifelse(Age[a] > 75, Age[a]+10, Age[a])
   HR[1] <- max(HR) + 20
   SBP[1] <- max(SBP) + 20
+  
   data.frame(Age,LVH, Cardiomegaly, HR, SBP, DM, VHD, CHD, RiskScore)
 }
-
-dataset <- generateDataset(500)
-head(dataset)
 ```
+
+
+###Analysis:
+Data Exploration:
+To confirm we have the assumed data distribution, mean and reasonable standard deviation, we polt a histogram of the quantitative measures.
+
+Summary of the dataset
+```{r}
+summary(dataset)
+```
+
+![Distribution] (https://github.com/spa380/DataSimulation616/blob/master/data_dist.png)
+
+The summary of the dataset and the plots confirm the distributions of the data we aimed for.
+
+Next, we look at the correlation among the variables and we find that age is positively correlated with all variables but more profoundly with systolic blood pressure and diabetes mellitus and as expected to the risk score.
+```{r}
+cor(dataset)
+
+```
+
+
+We would also want to verify the linearity between the age and few features related to age eg. SBP and diabetes.
+
+```{r}
+par(mfrow=c(1,2))
+fit.RiskScore <- lm(SBP~Age, data = dataset)
+summary(fit.RiskScore)
+plot(fit.RiskScore,1)
+plot(fit.RiskScore,2)
+```
+We see in the figure below that the data is normally distributed  with some outliers.
+
+![Distribution] (https://github.com/spa380/DataSimulation616/blob/master/Age_SBP.png)
+
+
+
+
+
+
+
+
+
+
+
+
 
 You can also embed plots, for example:
 
