@@ -43,7 +43,7 @@ It is a known fact that heart failure increase by age.  Similarly it's contribut
 Attempts were made to make the data mimic population prevalence of the conditions and definitely more effort will improve the outcome.
 A sample of 8000 observations were generated mimicking the study. The study provided mean values but not the standard deviations.
 Age was generated using random normal distribution with mean age of 63 and standard deviation of 10 yrs.
-
+![Distribution] (https://github.com/spa380/DataSimulation616/blob/master/data_dist.png)
 
 
 N<- 8000
