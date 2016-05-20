@@ -120,7 +120,7 @@ We would also want to verify the linearity between the age and few features rela
 
 ```{r}
 par(mfrow=c(1,2))
-fit.RiskScore <- lm(SBP~Age, data = dataset)
+fit.AgeSBP <- lm(SBP~Age, data = dataset)
 summary(fit.RiskScore)
 plot(fit.RiskScore,1)
 plot(fit.RiskScore,2)
@@ -129,10 +129,24 @@ We see in the figure below that the data is normally distributed  with some outl
 
 ![Distribution] (https://github.com/spa380/DataSimulation616/blob/master/Age_SBP.png)
 
+We can see the positive co-linearity between Age and SBP in the figure below :
+```{r}
+ggplot(dataset, aes(x=Age, y = SBP))+
+  geom_point()+
+  geom_vline(xintercept = mean(dataset$Age))+
+  geom_hline(yintercept = mean(dataset$SBP))
+```
+![Distribution] (https://github.com/spa380/DataSimulation616/blob/master/AgeSBP_Linearity.png)
 
+We can also see from the figure below that about 60% of the diabetics are above the mean age of sample of 63yrs.
+```{r}
+ggplot(dataset, aes(x=Age, y = DM))+
+  geom_point()+
+  geom_vline(xintercept = mean(dataset$Age))+
+  geom_hline(yintercept = mean(dataset$DM))
 
-
-
+```
+![Distribution] (https://github.com/spa380/DataSimulation616/blob/master/DiabetesAge.png)
 
 
 
