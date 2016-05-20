@@ -159,8 +159,10 @@ ggplot(dataset, aes(y=DM, x = RiskScore))+
 ![Distribution] (https://github.com/spa380/DataSimulation616/blob/master/DM_vs_RiskScore.png)
 
 Validating with t-test to find out if mean of the risk scores is significantly different in diabetics.
+
   t.test(RiskScore~DM, data = dataset, var.equal = FALSE)
----
+  
+
   	Welch Two Sample t-test
   
   data:    RiskScore by DM  
