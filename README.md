@@ -18,40 +18,40 @@ Heart failure is a progressive, often terminal stage of cardiac disease that, wh
 
 Heart fails dues to multiple causes. Most common are Coronary artery disease and Myocardial infraction. Others causes can be Hypertension, Myocarditis, Aoric stenosis, Mitral stenosis, tricuspid stenosis, regurgitation of mitral or aortic valve, Constrictive pericarditis, Restrictive Cardiomyopathy, Left ventricular hypertrophy, fibrosis, cardiac tamponade, arrythmias, congenital heart diseases etc. Some non cardiac diseases also contribute to the worsening of heart diseases like diabetes mellitus and pulmonary hypertension.
 
-The study considered some conditions which can be easily assessed in the outpatient setting and come up with a risk score for having heart disease in 4 yrs time.  Some of the factors considered were: 
--Age
--Left Ventricular Hypertrophy (LVH) using EKG
--Cardiomegaly (ratio >.5)
--Heart Rate (HR)
--Systolic BP (SBP)
--Diabetes Mellitus (DM)
--Valvular Heart Disease (VHD) presence of murmur > 3/6 and
--Congenital Heart Disease (CHD)
-
+The study considered some conditions which can be easily assessed in the outpatient setting and come up with a risk score for having heart disease in 4 yrs time.  Some of the factors considered were:   
+-Age  
+-Left Ventricular Hypertrophy (LVH) using EKG  
+-Cardiomegaly (ratio >.5)  
+-Heart Rate (HR)  
+-Systolic BP (SBP)  
+-Diabetes Mellitus (DM)  
+-Valvular Heart Disease (VHD) presence of murmur > 3/6 and  
+-Congenital Heart Disease (CHD)  
+  
 The study on which the referenced paper is based on is the Framingham Study which is a prospective, epidemiological, population-based study designed to investigate the prevalence, incidence, and determinants of cardiovascular disease.
 
 
 ###Objective:
--To come up with the heart failure risk score and predict the occurance of heart failue in a patient using histry and examination in the clinic and simple investigative tools like EKG and Chest X-ray?
-
--Enable the general practitioners and internists to estimate the risk of developing heart failure in predisposed persons with coronary disease, hypertension, or valvular heart disease—the most common causes of the condition.
+-To come up with the heart failure risk score and predict the occurance of heart failue in a patient using history and examination in the clinic and simple investigative tools like EKG and Chest X-ray?  
 
 
 ###Methodology:
 
 It is a known fact that heart failure increase by age.  Similarly it's contributing factors like hypertension, diabetes mellitus, valvular heart disease, left ventricular hypertrophy etc also increase by age. Here, most features are linearly and positively correlated with age. And each feature also is positively correlated with risk score.
 
-Attempts were made to make the data mimic population prevalence of the conditions and definitely more effort will improve the outcome.
-A sample of 8000 observations were generated mimicking the study. The study provided mean values but not the standard deviations.
--Age was generated using random normal distribution with mean age of 63 and standard deviation of 10 yrs.
--LVH, Cardiomegaly, Diabetes Mellitus, VHD and CHD  were generated using random uniform distribution value and logistic equation.
--Heart rate and systolic blood pressure were measured using random normal distribution using mean of 75.8 and 149.5 respectively from the study.
--Few outliers were added to age, heart rate and systolic blood pressure.
-
+Attempts were made to make the data mimic population prevalence of the conditions and definitely more effort will improve the outcome.  
+A sample of 500 observations were generated mimicking the study. The study provided mean values but not the standard deviations.    
+-Age was generated using random normal distribution with mean age of 63 and standard deviation of 10 yrs.    
+-LVH, Cardiomegaly, Diabetes Mellitus, VHD and CHD  were generated using random uniform distribution value and logistic equation.    
+-Heart rate and systolic blood pressure were measured using random normal distribution using mean of 75.8 and 149.5 respectively from the study.    
+-Few outliers were added to age, heart rate and systolic blood pressure.  
+  
 The study developed a point system to calculate the risk but to make the calculation simpler I decided to use the weightage multipliers system to mimic the data.
 
 
 ```{r}
+logistic <- function(t) 1 / (1 + exp(-t))
+
 N<- 500
 generateDataset <- function (N) {
   set.seed(1000)
@@ -92,12 +92,13 @@ generateDataset <- function (N) {
   
   data.frame(Age,LVH, Cardiomegaly, HR, SBP, DM, VHD, CHD, RiskScore)
 }
+dataset <- generateDataset(500)
 ```
 
 
 ###Analysis:
 Data Exploration:
-To confirm we have the assumed data distribution, mean and reasonable standard deviation, we polt a histogram of the quantitative measures.
+To confirm we have the assumed data distribution, mean and reasonable standard deviation, we plot a histogram of the quantitative measures.
 
 Summary of the dataset
 ```{r}
@@ -120,9 +121,9 @@ We would also want to verify the linearity between the age and few features rela
 ```{r}
 par(mfrow=c(1,2))
 fit.AgeSBP <- lm(SBP~Age, data = dataset)
-summary(fit.RiskScore)
-plot(fit.RiskScore,1)
-plot(fit.RiskScore,2)
+summary(fit.AgeSBP)
+plot(fit.AgeSBP,1)
+plot(fit.AgeSBP,2)
 ```
 We see in the figure below that the data is normally distributed  with some outliers.
 
@@ -130,6 +131,7 @@ We see in the figure below that the data is normally distributed  with some outl
 
 We can see the positive co-linearity between Age and SBP in the figure below :
 ```{r}
+require(ggplot2)
 ggplot(dataset, aes(x=Age, y = SBP))+
   geom_point()+
   geom_vline(xintercept = mean(dataset$Age))+
@@ -147,17 +149,74 @@ ggplot(dataset, aes(x=Age, y = DM))+
 ```
 ![Distribution] (https://github.com/spa380/DataSimulation616/blob/master/DiabetesAge.png)
 
+Now, looking at age and risk score, we find a positive correlation between them.
+![Distribution] (https://github.com/spa380/DataSimulation616/blob/master/Age_vs_RiskScore.png)
 
 
+The plot below shows that the diabetic patients have higher risk scores.
+```{r}
+ggplot(dataset, aes(y=DM, x = RiskScore))+
+  geom_point()+geom_vline(xintercept = mean(dataset$RiskScore))
+```
+![Distribution] (https://github.com/spa380/DataSimulation616/blob/master/DM_vs_RiskScore.png)
 
+Validating with t-test to find out if mean of the risk scores is significantly different in diabetics.
 
+  t.test(RiskScore~DM, data = dataset, var.equal = FALSE)
+  
 
+  	Welch Two Sample t-test
+  
+  data:    RiskScore by DM  
+  t = -2.8545, df = 52.913, p-value = 0.006142  
+  alternative hypothesis: true difference in means is not equal to 0  
+  95 percent confidence interval:  
+  -2.8074293 -0.4902019  
+  sample estimates:  
+  mean in group 0 mean in group 1   
+        39.36341        41.01222   
+       
+We can see that mean is significantly different in  diabetics and non diabetics. Similarly, we can perfrom t-tests on other dichotomous features as well.
 
+Finally, when we fit all the features against risk score, we find that all the features are significant with adjusted R2 value of 985. More tunning can be done to achieve optimal data.
 
-You can also embed plots, for example:
-
-```{r, echo=FALSE}
-plot(cars)
+```{r}
+par(mfrow=c(1,2))
+fit.RiskScore <- lm(RiskScore~., data = dataset)
+summary(fit.RiskScore)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+  Summary of fit.RiskScore  
+
+  Call:  
+  lm(formula = RiskScore ~ ., data = dataset)  
+  
+  Residuals:  
+      Min      1Q  Median      3Q     Max   
+  -7.9206 -0.0616  0.0254  0.1038  0.4813   
+  
+  Coefficients:  
+               Estimate Std. Error t value Pr(>|t|)      
+  (Intercept)  1.501270   0.229205   6.550 1.46e-10 ***  
+  Age          0.258827   0.002786  92.908  < 2e-16 ***  
+  LVH          0.146948   0.051246   2.867  0.00432 **   
+  Cardiomegaly 1.007535   0.055723  18.081  < 2e-16 ***  
+  HR           0.192407   0.001887 101.960  < 2e-16 ***  
+  SBP          0.040236   0.001743  23.081  < 2e-16 ***  
+  DM           0.728411   0.065325  11.150  < 2e-16 ***  
+  VHD          0.150609   0.054539   2.762  0.00597 **   
+  CHD          0.260020   0.127375   2.041  0.04175 *    
+  ---  
+  Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1  
+  
+  Residual standard error: 0.4146 on 491 degrees of freedom  
+  Multiple R-squared:  0.9876,	Adjusted R-squared:  0.9874   
+  F-statistic:  4894 on 8 and 491 DF,  p-value: < 2.2e-16  
+
+  
+
+
+###Conclusion  
+-We can successfully simulate data which will help us in calculating the risk of heart failure with reasonable accuracy.  
+
+-Even with method different from the point system, satisfactory level of data can be simulated for risk assessment.
