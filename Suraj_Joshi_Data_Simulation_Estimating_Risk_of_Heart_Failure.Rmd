@@ -159,18 +159,18 @@ ggplot(dataset, aes(y=DM, x = RiskScore))+
 ![Distribution] (https://github.com/spa380/DataSimulation616/blob/master/DM_vs_RiskScore.png)
 
 Validating with t-test to find out if mean of the risk scores is significantly different in diabetics.
-t.test(RiskScore~DM, data = dataset, var.equal = FALSE)
-
-	Welch Two Sample t-test
-
-data:  RiskScore by DM  
-t = -2.8545, df = 52.913, p-value = 0.006142  
-alternative hypothesis: true difference in means is not equal to 0  
-95 percent confidence interval:  
- -2.8074293 -0.4902019  
-sample estimates:  
-mean in group 0 mean in group 1   
-       39.36341        41.01222   
+  t.test(RiskScore~DM, data = dataset, var.equal = FALSE)
+---
+  	Welch Two Sample t-test
+  
+  data:    RiskScore by DM  
+  t = -2.8545, df = 52.913, p-value = 0.006142  
+  alternative hypothesis: true difference in means is not equal to 0  
+  95 percent confidence interval:  
+  -2.8074293 -0.4902019  
+  sample estimates:  
+  mean in group 0 mean in group 1   
+        39.36341        41.01222   
        
 We can see that mean is significantly different in  diabetics and non diabetics. Similarly, we can perfrom t-tests on other dichotomous features as well.
 
