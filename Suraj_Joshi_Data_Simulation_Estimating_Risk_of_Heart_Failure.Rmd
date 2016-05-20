@@ -1,0 +1,152 @@
+---
+title: 'Project: Estimating Risk of Heart Failure'
+author: "Suraj Joshi"
+date: "May 19, 2016"
+output: html_document
+---
+
+Title: Estimating Risk of Heart Failure - Data Simulation
+
+Reference: Kannel WB, D’Agostino RB, Silbershatz H, Belanger AJ, Wilson PWF, Levy D. Profile for estimating risk of heart failure. Archives of Internal Medicine. 1999;159(11):1197–1204. doi:10.1001/archinte.159.11.1197. http://archinte.jamanetwork.com/article.aspx?articleid=485049. Accessed May 19, 2016.
+
+
+Background:
+Heart Failure is the disease of elderly. It is present in 1% of the population between 50-59 yrs old and 10%  between 80-89 yrs old.
+ 
+Heart failure is a progressive, often terminal stage of cardiac disease that, when symptomatic, curtails survival like many types of cancer. In Framingham Study subjects with overt congestive heart failure, the median survival rate was only 1.7 years for men and 3.2 years for women.
+
+Heart fails dues to multiple causes. Most common are Coronary artery disease and Myocardial infraction. Others causes can be Hypertension, Myocarditis, Aoric stenosis, Mitral stenosis, tricuspid stenosis, regurgitation of mitral or aortic valve, Constrictive pericarditis, Restrictive Cardiomyopathy, Left ventricular hypertrophy, fibrosis, cardiac tamponade, arrythmias, congenital heart diseases etc. Some non cardiac diseases also contribute to the worsening of heart diseases like diabetes mellitus and pulmonary hypertension.
+
+The study considered some conditions which can be easily assessed in the outpatient setting and come up with a risk score for having heart disease in 4 yrs time.  Some of the factors considered were: 
+Age
+Left Ventricular Hypertrophy (LVH) using EKG
+Cardiomegaly (ratio >.5)
+Heart Rate (HR)
+Systolic BP (SBP)
+Diabetes Mellitus (DM)
+Valvular Heart Disease (VHD) presence of murmur > 3/6 and
+Congenital Heart Disease (CHD)
+
+The study on which the referenced paper is based on is the Framingham Study which is a prospective, epidemiological, population-based study designed to investigate the prevalence, incidence, and determinants of cardiovascular disease.
+
+
+Objective:
+-To come up with the heart failure risk score and predict the occurance of heart failue in a patient using histry and examination in the clinic and simple investigative tools like EKG and Chest X-ray?
+
+-Enable the general practitioners and internists to estimate the risk of developing heart failure in predisposed persons with coronary disease, hypertension, or valvular heart disease—the most common causes of the condition.
+
+
+Methodology:
+
+It is a known fact that heart failure increase by age.  Similarly it's contributing factors like hypertension, diabetes mellitus, valvular heart disease, left ventricular hypertrophy etc also increase by age. Here, most features are linearly and positively correlated with age. And each feature also is positively correlated with risk score.
+
+Attempts were made to make the data mimic population prevalence of the conditions and definitely more effort will improve the outcome.
+A sample of 8000 observations were generated mimicking the study. The study provided mean values but not the standard deviations.
+Age was generated using random normal distribution with mean age of 63 and standard deviation of 10 yrs.
+
+
+
+N<- 8000
+generateDataset <- function (N) {
+  set.seed(1000)
+  Age <- round(rnorm(N, 63, 10))
+#   hist(Age, 10)
+#   summary(Age)
+  
+  LVH <- runif(N)< .3*logistic((Age-60)/10) # # Left Ventricular Hypertrophy on EKG # boolean 0 = none 1 = present
+                          # 20% prevalence # boolean 0 or 1
+  (sum(LVH==TRUE)/N)*100
+  # hist(LVH)
+  
+  Cardiomegaly <- runif(N)< .08*logistic((Age-60)/10) # Xray # boolean 0 or 1
+  (sum(Cardiomegaly==TRUE)/N)*100
+  # hist(Cardiomegaly)
+  
+  HR <- round(rnorm(N, 75.8,10)+Age*.05) # heart rate # high if > 120 bpm numerical
+  # hist(HR)
+  
+  SBP<- round(rnorm(N,149.5, 10)-70+(Age+Age*.1+5)) # systolic blood pressure >140 mmHg numerical
+  # hist(SBP)
+
+  DM <- runif(N)< .17*logistic((Age-60)/10) # diabetes mellitus or in insulin or oral hypoglycemics boolean 0 or 
+  (sum(DM==TRUE)/N)*100
+  # hist(DM)
+  
+  VHD <- runif(N)< .2*logistic((Age-45)/10)  # valvular heart disease # boolean  0 or 1
+  # Epidemiology of acquired valvular heart disease. http://www.ncbi.nlm.nih.gov/pubmed/24986049
+  (sum(VHD==TRUE)/N)*100
+  
+  CHD <- runif(N)< .06*logistic((Age-60)/10) # congenital heart disease # boolean 0 or 1
+  (sum(CHD==TRUE)/N)*100
+  
+  RiskScore <- 10*(Age*.025+LVH*.01+Cardiomegaly*.0001+HR*.0002+SBP*.005+.07*DM+VHD*.01+CHD*.03)
+  
+  # Outliers
+  a = sample(1:500, 10)
+  Age[a] <- ifelse(Age[a] > 75, Age[a]+10, Age[a])
+  HR[1] <- max(HR) + 20
+  SBP[1] <- max(SBP) + 20
+  data.frame(Age,LVH, Cardiomegaly, HR, SBP, DM, VHD, CHD, RiskScore)
+}
+
+
+    The length of hospital stay is really caused by how ill or sick the patients happen to be.
+    The likelihood of being very sick is strongly influenced by prior conditions.
+    The likelihood of obtaining a flu vaccination is about twice as great for patients with prior conditions.
+    The likelihood of prior conditions increases with age.
+    I felt that since all the variables are binary (TRUE or FALSE), I would build a logistical regression model to solve the problem. After creating the data set the professor suggested that I plot the data. After trying to squeeze some results into a logistical regression methodology, I went back and looked at the plots embellishing them with color.
+    It is quite clear there are really two clusters of data, ones with patients with the flu vaccination and ones without.
+    In hindsight it was also clear how I built the model data that the linear equation was based on almost all the variables (because they were defined to be independent)
+    Separating the data into two clusters and modeling both clusters using a linear model gave ballpark results, with very large residuals or uncertainties. Although this model was not very accurate it might provide insight for a clinic to plan on how much resources in terms of staffing and room availability are needed. It also had a surprising result!
+    Variations in the amount and kinds of diseases provides variability, leading to a large residual errors for the simplest models based on age or the presence of a patient that had received a flu shot before entering the hospital.
+    So next I tried a linear model based on all the independent variables. This gave very good results
+    I descibe the data and rationale interpersed with code and plots below to describe the detail, including the data initiation.
+
+Conclusion:
+
+    "He ain't heavy he's my brother", well that is not it!
+    The confounding conclusion is that even though given limited data such as a chart that shows Length of Stay(LOS) increasing as a function of a patient that has had a flu vaccination, versus one that didn't: the LOS is really a function on how sick a patient really is.
+    Given that a sick patient is usually one that is older and under care it is more likely the sicker patient will have a flu shot versus someone that comes into a hospital without prior chronic diseases.
+    It goes to show that one needs to know the data, in order to avoid hidden pitfalls, or end up confused or confounded.
+
+Creation of the data set and associated code:
+
+    For this project originally I was going to use the manipulate function to select coefficients for variables. However, this was not necessary, and although I did get the manipulate function to vary results not quite to a normal distribution using 3 parameters, the results did not bear keeping in this project paper. All that is left is the library call.
+    In general running models at N = 1000 or N = 1e3 was sufficient to get reasonable results.
+    Create data where LOS is greater if not vaccinated based on paper(3) from Taiwan for high risk patients.
+    Created data from US paper(2) on rate of vaccination for high risk patient sets.
+    Note although the data is reasonable, the data was built as if all results are linear, which is unlikely to be true in real life scenarios
+    The following table are the approximate probabilities of patients that enter the hospital with one or more of these high risk conditions:
+    COPD | 0.05 | 0.06 | adj to original population
+    ASTH | 0.02 | 0.04 | including more age groups
+    HRTD | 0.08 | 0.09 |
+    DIAB | 0.01 | 0.04 | estimate rise of this disease
+    CANC | 0.08 | 0.09 |
+    Note: Model data includes rates of disease in hospitalization and rates of obtaining flu vaccination prior to entering the hospital ### The following code chunk creates the model data
+    Note that FLUSHOT if true indicates one had the flushot before entering the hospital
+    Note that the dependent variable LOWR indicating a low risk patient without any of the high risk maladies has been generated, but could be easily removed.
+    The Logistic function was used to fit the input data to hopefully a more realistic base dealing with primarily the older population
+    Finally a standard length of stay for each malady is provided.
+
+
+
+
+
+
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
