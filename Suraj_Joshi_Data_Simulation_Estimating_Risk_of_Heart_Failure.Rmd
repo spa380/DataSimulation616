@@ -32,9 +32,7 @@ The study on which the referenced paper is based on is the Framingham Study whic
 
 
 ###Objective:
--To come up with the heart failure risk score and predict the occurance of heart failue in a patient using histry and examination in the clinic and simple investigative tools like EKG and Chest X-ray?  
-
--Enable the general practitioners and internists to estimate the risk of developing heart failure in predisposed persons with coronary disease, hypertension, or valvular heart disease—the most common causes of the condition.
+-To come up with the heart failure risk score and predict the occurance of heart failue in a patient using history and examination in the clinic and simple investigative tools like EKG and Chest X-ray?  
 
 
 ###Methodology:
@@ -42,10 +40,10 @@ The study on which the referenced paper is based on is the Framingham Study whic
 It is a known fact that heart failure increase by age.  Similarly it's contributing factors like hypertension, diabetes mellitus, valvular heart disease, left ventricular hypertrophy etc also increase by age. Here, most features are linearly and positively correlated with age. And each feature also is positively correlated with risk score.
 
 Attempts were made to make the data mimic population prevalence of the conditions and definitely more effort will improve the outcome.  
-A sample of 500 observations were generated mimicking the study. The study provided mean values but not the standard deviations.  
--Age was generated using random normal distribution with mean age of 63 and standard deviation of 10 yrs.  
--LVH, Cardiomegaly, Diabetes Mellitus, VHD and CHD  were generated using random uniform distribution value and logistic equation.  
--Heart rate and systolic blood pressure were measured using random normal distribution using mean of 75.8 and 149.5 respectively from the study.  
+A sample of 500 observations were generated mimicking the study. The study provided mean values but not the standard deviations.    
+-Age was generated using random normal distribution with mean age of 63 and standard deviation of 10 yrs.    
+-LVH, Cardiomegaly, Diabetes Mellitus, VHD and CHD  were generated using random uniform distribution value and logistic equation.    
+-Heart rate and systolic blood pressure were measured using random normal distribution using mean of 75.8 and 149.5 respectively from the study.    
 -Few outliers were added to age, heart rate and systolic blood pressure.  
   
 The study developed a point system to calculate the risk but to make the calculation simpler I decided to use the weightage multipliers system to mimic the data.
