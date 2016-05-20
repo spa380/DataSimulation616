@@ -95,7 +95,7 @@ generateDataset <- function (N) {
 
 ###Analysis:
 Data Exploration:
-To confirm we have the assumed data distribution, mean and reasonable standard deviation, we polt a histogram of the quantitative measures.
+To confirm we have the assumed data distribution, mean and reasonable standard deviation, we plot a histogram of the quantitative measures.
 
 Summary of the dataset
 ```{r}
@@ -118,9 +118,9 @@ We would also want to verify the linearity between the age and few features rela
 ```{r}
 par(mfrow=c(1,2))
 fit.AgeSBP <- lm(SBP~Age, data = dataset)
-summary(fit.RiskScore)
-plot(fit.RiskScore,1)
-plot(fit.RiskScore,2)
+summary(fit.AgeSBP)
+plot(fit.AgeSBP,1)
+plot(fit.AgeSBP,2)
 ```
 We see in the figure below that the data is normally distributed  with some outliers.
 
@@ -174,7 +174,7 @@ Validating with t-test to find out if mean of the risk scores is significantly d
        
 We can see that mean is significantly different in  diabetics and non diabetics. Similarly, we can perfrom t-tests on other dichotomous features as well.
 
-Finally, when we fit all the features against risk score, we find that all the features are significant.  More tunning can be done to achieve optimal data.
+Finally, when we fit all the features against risk score, we find that all the features are significant with adjusted R2 value of 985. More tunning can be done to achieve optimal data.
 
 ```{r}
 par(mfrow=c(1,2))
